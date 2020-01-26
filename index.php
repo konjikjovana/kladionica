@@ -1,4 +1,6 @@
-<?php include "sesija.php"; ?>
+<?php include "sesija.php";
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
