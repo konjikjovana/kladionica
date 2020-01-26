@@ -9,9 +9,15 @@ class Baza
         $this->konekcija->set_charset("utf8");
     }
 
-    public function vratiAktivneMeceve()
+    public function vratiAktivneMeceve($mecevi)
     {
-        $upit = "SELECT * FROM mec where datumMeca > now()";
+        if(empty($mecevi)){
+            $upit = "SELECT * FROM mec where datumMeca > now()";
+        }else{
+            $idMeceva = implode(",",$mecevi);
+            $upit = "SELECT * FROM mec where datumMeca > now() and mecID NOT IN (".$idMeceva.")";
+        }
+
         $resultSet = $this->konekcija->query($upit);
         $rezultat = [];
         while($red = $resultSet->fetch_object()){
@@ -25,7 +31,7 @@ class Baza
     {
         $upit = "SELECT * FROM mec where mecID = " .$id;
         $resultSet = $this->konekcija->query($upit);
-        $rezultat = [];
+
         while($red = $resultSet->fetch_object()){
             return $red;
         }
@@ -68,5 +74,17 @@ class Baza
         $balans = 0;
         $stmt->bind_param("sssds", $imeprezime, $username, $password,$balans,$tipKorisnika);
         return $stmt->execute();
+    }
+
+    public function vratiKvotePoIdu($id)
+    {
+        $upit = "SELECT * FROM kvota k join ishod i on k.ishodID = i.ishodID where kvotaID = " .$id;
+        $resultSet = $this->konekcija->query($upit);
+
+        while($red = $resultSet->fetch_object()){
+            return $red;
+        }
+
+        return null;
     }
 }

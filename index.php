@@ -1,5 +1,5 @@
 <?php include "sesija.php";
-
+var_dump($_SESSION['aktivniTiket']);
 ?>
 
 <!DOCTYPE html>

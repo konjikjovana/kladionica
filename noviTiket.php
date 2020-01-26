@@ -1,21 +1,9 @@
 <?php include "sesija.php";
+
+$mecevi = $_SESSION['aktivniTiket'];
 include 'Baza.php';
 $baza = new Baza();
-$id = $_GET['id'];
 
-$mec = $baza->vratiMecPoIdu($id);
-
-$kvote = $baza->vratiKvoteZaMec($id);
-
-$nizKvota = [];
-
-foreach ($kvote as $kvota){
-    $nizKvota[$kvota->nazivIgre][] = [
-            'ishod' => $kvota->ishod,
-            'kvota' => $kvota->kvota,
-        'kvotaID' =>$kvota->kvotaID
-    ];
-}
 ?>
 
 <!DOCTYPE html>
@@ -73,30 +61,61 @@ foreach ($kvote as $kvota){
             <div class="row">
                 <div class="col-12">
                     <div class="section-heading">
-                        <h3><?= $mec->domacin ." - " . $mec->gost ?></h3>
+                        <h3>Tiket</h3>
                     </div>
                 </div>
 
-
-                    <?php
-                    foreach ($nizKvota as $key => $niz){
-                        ?>
-                        <div class="col-4">
-                        <h3>Naziv igre: <?= $key ?></h3>
-
-                        <?php
-                        foreach ($niz as $kvota){
-                            ?>
-                            <h3><a href="dodajNaTiket.php?mecID=<?= $id ?>&kvotaID=<?= $kvota['kvotaID']; ?>" class="btn btn-primary"><?= $kvota['ishod'] . " - " . $kvota['kvota']  ?></a> </h3>
+                <div class="col-12">
+                        <table class="table table-dark">
+                            <thead>
+                            <tr>
+                                <th>Mec</th>
+                                <th>Ishod</th>
+                                <th>Kvota</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             <?php
-                        }
-                        ?>
-                        </div>
-                    <?php
-                    }
-                    ?>
+                            $totalKvota = 1;
+                            foreach ($mecevi as $mec){
+                                $mecId = $mec['mecID'];
+                                $kvotaID = $mec['kvotaID'];
 
+                                $mecIzBaze = $baza->vratiMecPoIdu($mecId);
+                                $kvotaIzBaze = $baza->vratiKvotePoIdu($kvotaID);
+                                $totalKvota = $totalKvota * (double)$kvotaIzBaze->kvota;
+                                ?>
+                            <tr>
+                                <td><?= $mecIzBaze->domacin . " - " . $mecIzBaze->gost ?></td>
+                                <td><?= $kvotaIzBaze->ishod?></td>
+                                <td><?= $kvotaIzBaze->kvota?></td>
+                            </tr>
+                            <?php
+                            }
+                            ?>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th id="total" colspan="2">Ukupna kvota :</th>
+                                <td id="ukupnaKvota"><?= $totalKvota ?></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                </div>
+                <div class="col-10">
+                    <label for="uplata">Iznos uplate</label>
+                    <input type="number" id="uplata" class="form-control" placeholder="Iznos uplate" onkeyup="prikaziIznos()">
+                </div>
+                <div class="col-2">
+                    <label for="dugme">Pritisnite da uplatite</label>
+                    <button class="btn-dark btn-lg btn" id="dugme" onclick="uplatiTiket()">Uplati tiket</button>
+                </div>
+                <div class="col-12">
+                    <p id="Iznos"></p>
+                </div>
             </div>
+            <br><br>
         </div>
     </section>
 
@@ -122,26 +141,14 @@ foreach ($kvote as $kvota){
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/plugins/plugins.js"></script>
     <script src="js/active.js"></script>
-    <script>
-        function vratiAktivneMeceve() {
-            $.ajax({
-                url : 'kontroler.php?metoda=aktivniMecevi',
-                success: function (podaciServera) {
-                    let nalepi ='';
-                    $.each(JSON.parse(podaciServera),function (i,podatak) {
-                        nalepi += '<tr>';
-                        nalepi += '<td>'+podatak.domacin+'</td>';
-                        nalepi += '<td>'+podatak.gost+'</td>';
-                        nalepi += '<td>'+podatak.datumMeca+'</td>';
-                        nalepi += '<td><a class="btn btn-primary" href="detaljiMeca.php?id= '+podatak.mecID+'">Detalji Meca</a></td>';
-                        nalepi += '</tr>';
-                    });
-                    $("#ponuda").html(nalepi);
-                }
-            })
-        }
-        vratiAktivneMeceve();
-    </script>
+<script>
+    function prikaziIznos() {
+        let ukupnaKvota = $("#ukupnaKvota").text();
+        let uplata = $("#uplata").val();
+        let iznos = parseFloat(ukupnaKvota) * parseFloat(uplata);
+        $("#Iznos").html("Ukupan dobitak je: "+iznos+ " RSD.");
+    }
+</script>
 </body>
 
 </html>

@@ -6,7 +6,12 @@ $metoda = $_GET['metoda'];
 
 switch ($metoda){
     case 'aktivniMecevi':
-        echo json_encode($baza->vratiAktivneMeceve());
+        $meceviNaTiketu = $_SESSION['aktivniTiket'];
+        $mecevi = [];
+        foreach ($meceviNaTiketu as $item) {
+            $mecevi[] = $item['mecID'];
+        }
+        echo json_encode($baza->vratiAktivneMeceve($mecevi));
         break;
     case 'login':
         $korisnik = $baza->login($_POST['username'],$_POST['password']);
