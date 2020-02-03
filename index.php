@@ -1,5 +1,4 @@
 <?php include "sesija.php";
-var_dump($_SESSION['aktivniTiket']);
 ?>
 
 <!DOCTYPE html>
@@ -192,6 +191,20 @@ var_dump($_SESSION['aktivniTiket']);
             </div>
         </div>
     </section>
+    <section class="popular-courses-area section-padding-100-0" style="background-image: url(img/core-img/texture.png);">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading">
+                        <h3>Lige</h3>
+                    </div>
+                </div>
+                <div class="col-12" id="tabela">
+
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer-area">
         <!-- Top Footer Area -->
@@ -215,6 +228,32 @@ var_dump($_SESSION['aktivniTiket']);
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/plugins/plugins.js"></script>
     <script src="js/active.js"></script>
+    <script>
+    function popuniTabelu(){
+
+        $.ajax({
+            url: "podaciJavniApi.php",
+            dataType: "json",
+            success: function(result){
+                var text = '<table class="table table-stipped"><thead><tr><th>Liga</th><th>Drzava</th></tr></thead><tbody>';
+                let podaci = $.parseJSON(result);
+
+                $.each(podaci.competitions, function(i, val) {
+
+                    text += '<tr>';
+                    text += '<td>'+val.name+'</td>';
+                    text += '<td>'+val.area.name+'</td>';
+                    text += '</tr>';
+
+                });
+
+                text+='</tbody></table>';
+                $('#tabela').html(text);
+            }});
+    }
+    popuniTabelu();
+
+    </script>
 </body>
 
 </html>

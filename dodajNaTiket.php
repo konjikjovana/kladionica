@@ -5,4 +5,4 @@ $_SESSION['aktivniTiket'][] =[
     'kvotaID' => $_GET['kvotaID']
 ];
 
-header("Location: index.php");
+header("Location: noviTiket.php");

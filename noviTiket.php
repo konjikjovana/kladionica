@@ -103,16 +103,20 @@ $baza = new Baza();
                         </table>
 
                 </div>
-                <div class="col-10">
+                <div class="col-12">
+                    <input type="hidden" id="korisnikID" value="<?php echo $_SESSION['korisnikID'] ?>"
+                </div>
+                <div class="col-12">
                     <label for="uplata">Iznos uplate</label>
                     <input type="number" id="uplata" class="form-control" placeholder="Iznos uplate" onkeyup="prikaziIznos()">
                 </div>
-                <div class="col-2">
-                    <label for="dugme">Pritisnite da uplatite</label>
+                <hr>
+                <div class="col-12">
                     <button class="btn-dark btn-lg btn" id="dugme" onclick="uplatiTiket()">Uplati tiket</button>
                 </div>
                 <div class="col-12">
                     <p id="Iznos"></p>
+                    <h2 id="odgovorSaServera"></h2>
                 </div>
             </div>
             <br><br>
@@ -147,6 +151,31 @@ $baza = new Baza();
         let uplata = $("#uplata").val();
         let iznos = parseFloat(ukupnaKvota) * parseFloat(uplata);
         $("#Iznos").html("Ukupan dobitak je: "+iznos+ " RSD.");
+    }
+    
+    function uplatiTiket() {
+        let trenutniBalans = $("#balansUkupni").val();
+        let korisnikID = $("#korisnikID").val();
+        let uplata = $("#uplata").val();
+
+        if(parseInt(trenutniBalans) < parseInt(uplata)){
+            $("#odgovorSaServera").html("Nemate dovoljno novca na racunu za takvu uplatu. Vas balans je: "+trenutniBalans);
+        }else{
+            $.ajax({
+                url: 'obradiTiket.php',
+                type: 'POST',
+                data: {
+                    korisnikID : korisnikID,
+                    uplata : uplata
+                },
+                success: function (porukaSaServera) {
+                    $("#odgovorSaServera").html(porukaSaServera);
+                    window.setTimeout(function(){
+                        window.location.href = "ponuda.php";
+                    }, 3000);
+                }
+            })
+        }
     }
 </script>
 </body>

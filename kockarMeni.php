@@ -19,7 +19,8 @@
                         <li><a href="ponuda.php">Ponuda</a></li>
                         <li><a href="mojitiketi.php">Moji tiketi</a></li>
                         <li><a href="noviTiket.php">Tiket</a></li>
-                        <span style="padding-right: 10px; color: darkred; font-size: 18px;">Balans - 2000 dinara</span>
+                        <li><span style="padding-right: 10px; color: darkred; font-size: 18px;">Balans - <?php echo $_SESSION['balans'] ?></span></li>
+                        <input type="hidden" value="<?php echo $_SESSION['balans'] ?>" id="balansUkupni">
                     </ul>
 
                     <div class="register-login-area">

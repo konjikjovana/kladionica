@@ -34,4 +34,29 @@ switch ($metoda){
             header("Location: registracija.php?poruka=Registracija je neuspesna" );
         }
         break;
+    case 'unosMeca':
+        $uspesno = $baza->unesiMec($_POST['domacin'],$_POST['gost'],$_POST['datum']);
+        if($uspesno){
+            header("Location: unosMeca.php?poruka=Uspesno ste uneli mec");
+        }else{
+            header("Location: unosMeca.php?poruka=Doslo je do greske" );
+        }
+        break;
+    case 'unosKvote':
+        $mecID = $_POST['mec'];
+        $ishodID = $_POST['ishod'];
+        $kvota = $_POST['kvota'];
+        $rezultat = $baza->pronadjiKvotuZaMecIIshod($mecID,$ishodID);
+        if(empty($rezultat)){
+            $uspesno = $baza->sacuvajKvotu($mecID,$ishodID,$kvota);
+            if($uspesno){
+                header("Location: unosKvota.php?poruka=Uspesno ste uneli kvotu");
+            }else{
+                header("Location: unosKvota.php?poruka=Doslo je do greske" );
+            }
+        }else{
+            header("Location: unosKvota.php?poruka=Kvota za ovaj mec i ishod vec postoji" );
+        }
+
+        break;
 }

@@ -16,10 +16,10 @@
                 <div class="classynav">
                     <ul>
                         <li><a href="index.php">Pocetna</a></li>
-                        <li><a href="ponuda.php">Ponuda</a></li>
-                        <li><a href="mojitiketi.php">Moji tiketi</a></li>
-                        <li><a href="noviTiket.php">Tiket</a></li>
-                        <span>Balans - 2000</span>
+                        <li><a href="uplatiNaRacun.php">Uplati na racun</a></li>
+                        <li><a href="administracijaTiketa.php">Administracija tiketa</a></li>
+                        <li><a href="unosMeca.php">Unos meca</a></li>
+                        <li><a href="unosKvota.php">Unos kvota</a></li>
                     </ul>
 
                     <div class="register-login-area">
